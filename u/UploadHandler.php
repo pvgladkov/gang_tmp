@@ -14,11 +14,11 @@ include 'lib.php';
 
 class UploadHandler
 {
-	private $sTitle;
+	private $sTitle = '';
 	
-	private $sComment;
+	private $sComment = '';
 
-	private $sUserHash;
+	private $sUserHash = '';
 	
 	private $sNewFileName;
 	
@@ -175,13 +175,21 @@ class UploadHandler
         return '';
     }
 
+	/**
+	 * 
+	 * @param string $file_name
+	 * @return string
+	 */
+	private function get_new_upload_path( $file_name = null ){
+		
+		$file_name = $file_name ? $file_name : '';
+      
+        return $this->options['upload_dir'].$this->get_user_path()
+            .$this->getNewFileName( $file_name );
+	}
+	
     protected function get_upload_path($file_name = null, $version = null) {
         
-		$sTimeStamp = time();
-		// узнаем расширение файла
-		$sExt =  substr( strrchr( $file_name, '.' ), 1 );
-		$file_name = $sTimeStamp .'.'.$sExt;
-		
 		$file_name = $file_name ? $file_name : '';
         $version_path = empty($version) ? '' : $version.'/';
         return $this->options['upload_dir'].$this->get_user_path()
@@ -518,7 +526,9 @@ class UploadHandler
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, $this->options['mkdir_mode'], true);
             }
-            $file_path = $this->get_upload_path($file->name);
+			
+            $file_path = $this->get_new_upload_path($file->name);
+			
             $append_file = $content_range && is_file($file_path) &&
                 $file->size > $this->get_file_size($file_path);
             if ($uploaded_file && is_uploaded_file($uploaded_file)) {
@@ -563,7 +573,9 @@ class UploadHandler
                 }
             } else if (!$content_range && $this->options['discard_aborted_uploads']) {
                 unlink($file_path);
-                $file->error = 'abort';
+                $file->error = Response::getMessageByCode( Response::ABORT );
+				// отправим нам уведомление 
+				$this->sendErrorNotify( Response::ABORT );
             }
             $file->size = $file_size;
             $this->set_file_delete_properties($file);
@@ -775,6 +787,7 @@ class UploadHandler
 
 		$sUsrl = 'http://'.IP_URL.'/quiz/status';
 	
+		// отпавим только имя файла
 		$sFilename =  substr( strrchr( $sFilename, '/' ), 1 );
 		
 		$aParams = array(
@@ -824,20 +837,36 @@ class UploadHandler
 		
 	}
 	
+	/**
+	 * 
+	 */
 	private function setUserHash(){
-		$this->sUserHash = htmlspecialchars( $_POST['id'] );
+		if( isset( $_POST['id'] ) ){
+			$this->sUserHash = htmlspecialchars( $_POST['id'] );
+		}
 	}
 	
+	/**
+	 * 
+	 */
 	private function setTitle(){
-		$this->sTitle = htmlspecialchars( $_POST['title'] );
+		if( isset($_POST['title']) ){
+			$this->sTitle = htmlspecialchars( $_POST['title'] );
+		}
 	}
 	
+	/**
+	 * 
+	 */
 	private function setComment(){
-		$this->sComment = htmlspecialchars( $_POST['comment'] );
+		if( isset( $_POST['comment'] ) ){
+			$this->sComment = htmlspecialchars( $_POST['comment'] );
+		}
 	}
 
 	/**
 	 * 
+	 * @param type $sFilename
 	 */
 	private function setNewFileName( $sFilename ){
 		
@@ -846,7 +875,7 @@ class UploadHandler
 		// узнаем расширение файла
 		$sExt =  substr( strrchr( $sFilename, '.' ), 1 );
 	
-		$this->sNewFileName = $sTimeStamp .'.'.$sExt; 
+		$this->sNewFileName = $this->sUserHash.'-'.$sTimeStamp .'.'.$sExt; 
 	}	
 	
 	/**
@@ -856,11 +885,20 @@ class UploadHandler
 	 */
 	private function getNewFileName( $sFilename ){
 		
-		if( empty( $this->sNewFileName ) ){
-			$this->setNewFileName( $sFilename );
+		if( !isset( $this->sNewFileName ) ){
+			$this->setNewFileName($sFilename);
 		}
 		
 		return $this->sNewFileName;
+	}
+	
+	/**
+	 * 
+	 * @param type $sError
+	 */
+	private function sendErrorNotify( $sError ){
+		
+		mail( 'gladkov@idealprice.ru', 'Ошибка при загрузке файла', $sError );
 	}
 		
 }

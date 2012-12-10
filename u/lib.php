@@ -223,11 +223,14 @@ class Response {
 	
 	const VALID_USER = 'valid_user';
 	
+	const ABORT = 'abort';
+	
 	private static  $aMessages = array(
-		self::BAD_STATUS	=> 'плохой статус',
-		self::BAD_USER		=> 'плохой пользователь',
+		self::BAD_STATUS	=> 'При загрузке файла произошла ошибка. Попробуйте повторить позже.',
+		self::BAD_USER		=> 'Неверный URL для загрузки',
 		self::OK			=> 'все хорошо',
-		self::VALID_USER	=> 'норм'
+		self::VALID_USER	=> 'норм',
+		self::ABORT			=> 'При загрузке файла произошла ошибка. Попробуйте повторить позже.',
 	);
 	
 	/**
