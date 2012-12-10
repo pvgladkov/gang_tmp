@@ -271,6 +271,9 @@ class UploadHandler
     }
 
     protected function get_file_objects($iteration_method = 'get_file_object') {
+		
+		return array();
+		
         $upload_dir = $this->get_upload_path();
         if (!is_dir($upload_dir)) {
             return array();
