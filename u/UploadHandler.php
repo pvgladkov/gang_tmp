@@ -379,7 +379,7 @@ class UploadHandler
             return false;
         }
 		
-		$sResp = $this->validateUser();
+		$sResp = self::validateUser( $this->sUserHash );
 		if( $sResp == Response::BAD_USER ){
 			 $file->error = Response::getMessageByCode( $sResp );
 			 return false;
@@ -814,12 +814,12 @@ class UploadHandler
 	 * 
 	 * @return type
 	 */
-	private function validateUser(){
+	public static function validateUser( $sUserHash ){
 		
 		$sUsrl = 'http://'.IP_URL.'/quiz/status';
 	
 		$aParams = array(
-			'user_hash'	=> $this->sUserHash,
+			'user_hash'	=> $sUserHash,
 			'status'	=> 1,
 			'test_flag'	=> 1 // флаг, который говорит, что надо просто проверить валидность хэша
 		);
