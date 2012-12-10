@@ -34,13 +34,6 @@ $(function () {
             },
 
             submit: function(e,data){
-                if( $('input[name="title"]').val() == '' ){
-                    $('.template-upload').remove();
-                    alert('Пожалуйста, введите название ролика.');
-                    return false;        
-                }
-                
-
                 $('.fileinput-button').hide();
             },
             error: function(e,data){
