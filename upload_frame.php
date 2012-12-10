@@ -5,7 +5,11 @@ $url = basename($_SERVER['SCRIPT_FILENAME']);
 //Get file upload progress information.
 if( isset($_GET['progress_key']) ) {
 	$status = apc_fetch('upload_'.$_GET['progress_key']);
-	echo $status['current']/$status['total']*100;
+	if( isset($status['total']) && $status['total'] > 0 ){
+		echo $status['current']/$status['total']*100;
+	} else {
+		echo 0;
+	}
 	die();
 }
 ?>
