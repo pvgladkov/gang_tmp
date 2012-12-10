@@ -76,6 +76,14 @@
             padding: 12px 0 0 0; 
             text-align: center;
         }
+        .video-loader-overlay{
+            position: absolute;
+            margin-top: -40px;
+            margin-left: 49px;
+            text-shadow: 1px 1px 2px black, 0 0 1em black; /* Параметры тени */
+            color: white; /* Белый цвет текста */
+            font-size: 1em; /* Размер надписи */
+        }
 
     </style>
 </head> 
@@ -123,6 +131,9 @@
                     </span>
                 </div>
             </div>
+            <div style="padding-left: 210px;">
+                Максимальный размер файла 2.9 Гб
+            </div>
             <!-- The table listing the files available for upload/download -->
             <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
            </form>
@@ -152,6 +163,7 @@
                 {% } else if (o.files.valid && !i) { %}
                     <td>
                         <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+                        <div class="video-loader-overlay">Загрузка видео...</div>
                     </td>
                     <td class="start">{% if (!o.options.autoUpload) { %}
                         <button class="btn btn-primary">
@@ -176,6 +188,7 @@
         {% for (var i=0, file; file=o.files[i]; i++) { %}
             <tr class="template-download fade">
                 {% if (file.error) { %}
+
                     <td></td>
                     <td class="name"><div class="file-name-block">{%=file.name%}</div></td>
                     <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
