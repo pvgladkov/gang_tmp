@@ -51,10 +51,32 @@
         .name {
             overflow: hidden;
         }
+        .ok-message{
+            display: none;
+            position: absolute;
+            width: 240px;
+            height: 81px;
 
-        .content-body-inside .form-wrapper .form{
+            top: 48%;
+            left: 39%;
 
+            border: 1 px solid silver;
+            background: white;
+            padding: 30px 25px;
+
+            -webkit-border-radius: 20px;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+            z-index: 99;
         }
+
+        .button-container{
+            width: 
+            margin: 0 auto;
+            padding: 12px 0 0 0; 
+            text-align: center;
+        }
+
     </style>
 </head> 
 
@@ -92,7 +114,7 @@
     				Комментарий:<br/> 
     				<textarea name="comment"></textarea> <br/>
     				
-    				<input type="hidden" name ="id" value="<?= preg_replace( '#[^0-9a-zA-Z]#', '', $_GET['id'] ) ?>">
+    				<input type="hidden" name ="id" value="<?= $_GET['id'] ?>">
 
                     <span class="btn btn-success fileinput-button">
                         <i class="icon-plus icon-white"></i>
@@ -112,6 +134,12 @@
             </div>
         </div>
         <div class="shadow"></div>
+        <div class="ok-message">
+            Прекрасно. Мы посмотрим видео, опубликуем его и оповестим вас в течение 2-3 дней.<br/>
+            <div class="button-container">
+                <button class="btn btn-success ok-button" >OK</button>
+            </div>
+        </div>
 
         <!-- The template to display files available for upload -->
         <script id="template-upload" type="text/x-tmpl">

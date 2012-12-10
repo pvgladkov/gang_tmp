@@ -1,6 +1,5 @@
 /*jslint nomen: true, unparam: true, regexp: true */
 /*global $, window, document */
-
 $(function () {
     'use strict';
 
@@ -9,21 +8,49 @@ $(function () {
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
         url: 'u/',
-        autoUpload: true
+        autoUpload: true,
+        limitMultiFileUploads: 1
     });
 
-   /* $('#fileupload').fileupload(
+    function closeModal(){
+        $('.ok-message').hide();
+        $('.shadow').hide();
+        $('.template-upload').remove();
+        $('.fileinput-button').show();
+    }
+
+    $('.ok-message .ok-button').click(closeModal); 
+
+    $('#fileupload').fileupload(
         'option',
         {
             done: function (e, data) {
-                alert('done!');
+                $('input[name="title"]').val('');
+                $('textarea[name="comment"]').val('');
+                $('.ok-message').show();
+                $('.shadow').show();
+                $('.shadow').click(closeModal);
+                
             },
-            error: function (e, data) {
-                alert('panic!');
+
+            submit: function(e,data){
+                if( $('input[name="title"]').val() == '' ){
+                    $('.template-upload').remove();
+                    alert('Пожалуйста, введите название ролика.');
+                    return false;        
+                }
+                
+
+                $('.fileinput-button').hide();
             },
+            error: function(e,data){
+                $('.fileinput-button').show();   
+            },
+
             autoUpload: true
         }
-    );*/
+    );
+
     // Enable iframe cross-domain access via redirect option:
     $('#fileupload').fileupload(
         'option',
@@ -33,7 +60,4 @@ $(function () {
             '/cors/result.html?%s'
         )
     );
-
-
-   
 });
