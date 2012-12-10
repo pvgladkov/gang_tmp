@@ -849,6 +849,11 @@ class UploadHandler
 		$this->sNewFileName = $sTimeStamp .'.'.$sExt; 
 	}	
 	
+	/**
+	 * 
+	 * @param type $sFilename
+	 * @return type
+	 */
 	private function getNewFileName( $sFilename ){
 		
 		if( empty( $this->sNewFileName ) ){

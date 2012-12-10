@@ -3,6 +3,8 @@
 /**
  * 
  */
+include( 'u/const.php' );
+
 class Uploader{
 	
 	/**
